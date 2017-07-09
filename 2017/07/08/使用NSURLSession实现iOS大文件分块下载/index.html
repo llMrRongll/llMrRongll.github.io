@@ -1,0 +1,679 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="如果在网速一定的情境下，大文件（目前指的是100M以上的文件）的下载对用户来说是一段不短的时间，用户体验不是很好。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用NSURLSession实现iOS大文件分块下载">
+<meta property="og:url" content="http://yoursite.com/2017/07/08/使用NSURLSession实现iOS大文件分块下载/index.html">
+<meta property="og:site_name" content="MRong&#39;s Notes">
+<meta property="og:description" content="如果在网速一定的情境下，大文件（目前指的是100M以上的文件）的下载对用户来说是一段不短的时间，用户体验不是很好。">
+<meta property="og:updated_time" content="2017-07-08T08:08:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用NSURLSession实现iOS大文件分块下载">
+<meta name="twitter:description" content="如果在网速一定的情境下，大文件（目前指的是100M以上的文件）的下载对用户来说是一段不短的时间，用户体验不是很好。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/08/使用NSURLSession实现iOS大文件分块下载/"/>
+
+
+
+
+
+  <title> 使用NSURLSession实现iOS大文件分块下载 | MRong's Notes </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">MRong's Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/08/使用NSURLSession实现iOS大文件分块下载/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="MRong">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="MRong's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                使用NSURLSession实现iOS大文件分块下载
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-08T16:00:20+08:00">
+                2017-07-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>如果在网速一定的情境下，大文件（目前指的是100M以上的文件）的下载对用户来说是一段不短的时间，用户体验不是很好。<br><a id="more"></a><br>分块下载文件实现原理<br>如果要实现文件的分段下载，我们首先需要知道要下载的文件的大小，这里需要向服务器发送HTTP请求，请求方法为HEAD，这样服务器只会给客户端返回response的包头信息，不会发送数据信息，然后我们通过包头信息中的Content-Length字段可以得到要下载的文件的总长度。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">- (void)getFileTotalLengthWithURL:(NSString *)url</div><div class="line">                       completion:(void(^)(NSInteger length))completion&#123;</div><div class="line">    NSURL *URL = [NSURL URLWithString:url];</div><div class="line">    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];</div><div class="line">    request.HTTPMethod = @&quot;HEAD&quot;;</div><div class="line">    NSURLSession *session = [NSURLSession sharedSession];</div><div class="line">    NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) &#123;</div><div class="line">        </div><div class="line">        if ([response isKindOfClass:[NSHTTPURLResponse class]]) &#123;</div><div class="line">            NSHTTPURLResponse *tmpResponse = (NSHTTPURLResponse *)response;</div><div class="line">            NSLog(@&quot;allHeaderFields:%@&quot;, tmpResponse.allHeaderFields);</div><div class="line">        &#125;</div><div class="line">        NSInteger fileTotalLength = response.expectedContentLength;</div><div class="line">        completion(fileTotalLength);</div><div class="line">    &#125;];</div><div class="line">    [dataTask resume];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>获取到要下载的文件的总长度之后，在本地沙盒中创建一个同样大小的文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">- (void)multiDownloadWithFileLength:(NSInteger)fileLength url:(NSURL *)url&#123;</div><div class="line">    _wholeFileLength = fileLength;</div><div class="line"></div><div class="line">    NSString *filePath = [self filePathWithFileName:url.lastPathComponent];</div><div class="line">    NSFileManager *fm = [NSFileManager defaultManager];</div><div class="line">    if ([fm fileExistsAtPath:filePath]) &#123;</div><div class="line">        [fm removeItemAtPath:filePath error:nil];</div><div class="line">    &#125;</div><div class="line">    [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];</div><div class="line"></div><div class="line">    _filePath = filePath;</div><div class="line">    _fileHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];</div><div class="line">    [_fileHandle truncateFileAtOffset:fileLength];</div><div class="line">    </div><div class="line">    NSBlockOperation *addOperationOP = [NSBlockOperation blockOperationWithBlock:^&#123;</div><div class="line">        while (_completedLength &lt; fileLength) &#123;</div><div class="line">            long long startSize = _completedLength;</div><div class="line">            long long endSize = startSize+blockSize;</div><div class="line">            </div><div class="line">            if (endSize &gt; fileLength) &#123;</div><div class="line">                endSize = fileLength - 1;</div><div class="line">                _completedLength = fileLength;</div><div class="line">            &#125; else &#123;</div><div class="line">                _completedLength += blockSize;</div><div class="line">            &#125;</div><div class="line">            </div><div class="line">            //一个operation对应一个downloadTask</div><div class="line">            </div><div class="line">            NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^&#123;</div><div class="line">                </div><div class="line">                NSString *range=[NSString stringWithFormat:@&quot;bytes=%lld-%lld&quot;, startSize, endSize];</div><div class="line">                NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];</div><div class="line">                [request setValue:range forHTTPHeaderField:@&quot;Range&quot;];</div><div class="line">                NSLog(@&quot;requestHeader:%@&quot;, request.allHTTPHeaderFields);</div><div class="line">                NSURLSessionDownloadTask *task = [self.session downloadTaskWithRequest:request];</div><div class="line">                </div><div class="line">                [task resume];</div><div class="line">                </div><div class="line">            &#125;];</div><div class="line">            [_queue addOperation:operation];</div><div class="line">        &#125;</div><div class="line">    &#125;];</div><div class="line">    [_queue addOperation:addOperationOP];</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>每个请求块的大小<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#define blockSize 1024*1024</div></pre></td></tr></table></figure></p>
+<p>新建一个下载队列，循环发送请求，在请求头中设置Range字段<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">NSOperationQueue *queue = [NSOperationQueue currentQueue];</div><div class="line">    NSBlockOperation *addOperationOP = [NSBlockOperation blockOperationWithBlock:^&#123;</div><div class="line">        while (_completedLength &lt; fileLength) &#123;</div><div class="line">            long long startSize = _completedLength;</div><div class="line">            long long endSize = startSize+blockSize;</div><div class="line">            </div><div class="line">            if (endSize &gt; fileLength) &#123;</div><div class="line">                endSize = fileLength - 1;</div><div class="line">                _completedLength = fileLength;</div><div class="line">            &#125; else &#123;</div><div class="line">                _completedLength += blockSize;</div><div class="line">            &#125;</div><div class="line">            </div><div class="line">            //一个operation对应一个downloadTask</div><div class="line">            </div><div class="line">            NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^&#123;</div><div class="line">                </div><div class="line">                NSString *range=[NSString stringWithFormat:@&quot;bytes=%lld-%lld&quot;, startSize, endSize];</div><div class="line">                NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];</div><div class="line">                [request setValue:range forHTTPHeaderField:@&quot;Range&quot;];</div><div class="line">                NSLog(@&quot;requestHeader:%@&quot;, request.allHTTPHeaderFields);</div><div class="line">                NSURLSessionDownloadTask *task = [self.session downloadTaskWithRequest:request];</div><div class="line">                </div><div class="line">                [task resume];</div><div class="line">                </div><div class="line">            &#125;];</div><div class="line">            [queue addOperation:operation];</div><div class="line">        &#125;</div><div class="line">    &#125;];</div><div class="line">    [queue addOperation:addOperationOP];</div></pre></td></tr></table></figure></p>
+<p>在代理方法中将获取到的数据写到已经创建好的空文件的对应的位置中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line"> - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location&#123;</div><div class="line">    </div><div class="line">    DLQData *tmpReceivedData = [[DLQData alloc] init];</div><div class="line">    NSInteger startSize = 0;</div><div class="line">    NSInteger endSize = 0;</div><div class="line">    </div><div class="line">    if ([downloadTask.response isKindOfClass:[NSHTTPURLResponse class]]) &#123;</div><div class="line">        NSHTTPURLResponse *tmpResponse = (NSHTTPURLResponse *)downloadTask.response;</div><div class="line">        NSDictionary *dic = tmpResponse.allHeaderFields;</div><div class="line">        NSLog(@&quot;diiiiiic: %@&quot;, dic[@&quot;Content-Range&quot;]);</div><div class="line">        NSString *fileRange = dic[@&quot;Content-Range&quot;];</div><div class="line">        fileRange = [fileRange stringByReplacingOccurrencesOfString:@&quot;bytes&quot; withString:@&quot;&quot;];</div><div class="line">        fileRange = [fileRange stringByReplacingOccurrencesOfString:@&quot; &quot; withString:@&quot;&quot;];</div><div class="line">        NSArray *aTmp1 = [fileRange componentsSeparatedByString:@&quot;/&quot;];</div><div class="line">        NSArray *aTmp2 = @[];</div><div class="line">        if (aTmp1.count) &#123;</div><div class="line">            NSString *tmpStr = aTmp1[0];</div><div class="line">            aTmp2 = [tmpStr componentsSeparatedByString:@&quot;-&quot;];</div><div class="line">            if (aTmp1.count &gt;= 2) &#123;</div><div class="line">                NSString *startSizeStr = aTmp2[0];</div><div class="line">                NSString *endSizeStr = aTmp2[1];</div><div class="line">                startSize = startSizeStr.integerValue;</div><div class="line">                endSize = endSizeStr.integerValue;</div><div class="line">        </div><div class="line">                tmpReceivedData.data = [NSData dataWithContentsOfURL:location];</div><div class="line">                tmpReceivedData.startSize = startSize;</div><div class="line">                tmpReceivedData.endSize = endSize;</div><div class="line">                </div><div class="line">                [_fileHandle seekToFileOffset:tmpReceivedData.startSize];</div><div class="line">                [_fileHandle writeData:tmpReceivedData.data];</div><div class="line">                [_fileData appendData:tmpReceivedData.data];</div><div class="line">                </div><div class="line">                double progress = _fileData.length/_wholeFileLength;</div><div class="line">                progress = progress &gt;= 1 ? 1 : progress;</div><div class="line">                if (progress == 1) &#123;</div><div class="line">                    NSLog(@&quot;分段下载完成&quot;);</div><div class="line">                    NSLog(@&quot;downloadProgress:%f&quot;, progress);</div><div class="line">                    </div><div class="line">                    [_operationQueue cancelAllOperations];</div><div class="line">                    _operationQueue = nil;</div><div class="line">                    </div><div class="line">                    if ([self.delegate respondsToSelector:@selector(multiDownloadDidFinished:)] &amp;&amp; [self.delegate respondsToSelector:@selector(multiDownloadProgress:)]) &#123;</div><div class="line">                        NSOperationQueue *mainQueue = [NSOperationQueue mainQueue];</div><div class="line">                        [mainQueue addOperationWithBlock:^&#123;</div><div class="line">                            [self.delegate multiDownloadProgress:progress];</div><div class="line">                            [self.delegate multiDownloadDidFinished:_filePath];</div><div class="line"></div><div class="line">                        &#125;];</div><div class="line">                    &#125;</div><div class="line">                &#125;else&#123;</div><div class="line">                    if ([self.delegate respondsToSelector:@selector(multiDownloadProgress:)]) &#123;</div><div class="line">                        NSOperationQueue *mainQueue = [NSOperationQueue mainQueue];</div><div class="line">                        [mainQueue addOperationWithBlock:^&#123;</div><div class="line">                            [self.delegate multiDownloadProgress:progress];</div><div class="line">                        &#125;];</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><a href="https://github.com/llMrRongll/TestDownLoad" target="_blank" rel="external">点我看Demo</a></p>
+<blockquote>
+<p>参考文章<br><a href="http://www.cnblogs.com/wendingding/p/3947550.html" target="_blank" rel="external">iOS开发网络篇—多线程断点下载</a></p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/11/Markdown学习/" rel="next" title="MarkDown语法">
+                <i class="fa fa-chevron-left"></i> MarkDown语法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="SOHUCS"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="MRong" />
+          <p class="site-author-name" itemprop="name">MRong</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">MRong</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
