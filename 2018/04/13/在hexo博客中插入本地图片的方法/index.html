@@ -94,17 +94,19 @@
 
 
 
-<meta name="description" content="使用hexo搭建博客，生成博文之后文章中的图片却只能加载网络图片？为什么不能加载hexo网站目录内的图片呢？于是乎…某度之后，有了本文，这位同学Nuub的博客很好的解决了我的这个问题 整体步骤总结如下：  打开博客网站根目录下的配置文件_config.yml，并修改true```1234567![修改_config.yml](在hexo博客中插入本地图片的方法/modify_config.png)">
+<meta name="description" content="使用hexo搭建博客，生成博文之后文章中的图片却只能加载网络图片？为什么不能加载hexo网站目录内的图片呢？于是乎…某度之后，有了本文，这位同学Nuub的博客很好的解决了我的这个问题 整体步骤总结如下：  打开博客网站根目录下的配置文件_config.yml，并修改post_asset-folder: true    在终端cd到博客目录下，运行npm install hexo-asset-ima">
 <meta property="og:type" content="article">
 <meta property="og:title" content="在hexo博客中插入本地图片的方法">
 <meta property="og:url" content="http://yoursite.com/2018/04/13/在hexo博客中插入本地图片的方法/index.html">
 <meta property="og:site_name" content="Roee&#39;s Blog">
-<meta property="og:description" content="使用hexo搭建博客，生成博文之后文章中的图片却只能加载网络图片？为什么不能加载hexo网站目录内的图片呢？于是乎…某度之后，有了本文，这位同学Nuub的博客很好的解决了我的这个问题 整体步骤总结如下：  打开博客网站根目录下的配置文件_config.yml，并修改true```1234567![修改_config.yml](在hexo博客中插入本地图片的方法/modify_config.png)">
+<meta property="og:description" content="使用hexo搭建博客，生成博文之后文章中的图片却只能加载网络图片？为什么不能加载hexo网站目录内的图片呢？于是乎…某度之后，有了本文，这位同学Nuub的博客很好的解决了我的这个问题 整体步骤总结如下：  打开博客网站根目录下的配置文件_config.yml，并修改post_asset-folder: true    在终端cd到博客目录下，运行npm install hexo-asset-ima">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-13T16:04:36.848Z">
+<meta property="og:image" content="http://yoursite.com/2018/04/13/在hexo博客中插入本地图片的方法/modify_config.png">
+<meta property="og:updated_time" content="2018-04-13T16:16:23.114Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在hexo博客中插入本地图片的方法">
-<meta name="twitter:description" content="使用hexo搭建博客，生成博文之后文章中的图片却只能加载网络图片？为什么不能加载hexo网站目录内的图片呢？于是乎…某度之后，有了本文，这位同学Nuub的博客很好的解决了我的这个问题 整体步骤总结如下：  打开博客网站根目录下的配置文件_config.yml，并修改true```1234567![修改_config.yml](在hexo博客中插入本地图片的方法/modify_config.png)">
+<meta name="twitter:description" content="使用hexo搭建博客，生成博文之后文章中的图片却只能加载网络图片？为什么不能加载hexo网站目录内的图片呢？于是乎…某度之后，有了本文，这位同学Nuub的博客很好的解决了我的这个问题 整体步骤总结如下：  打开博客网站根目录下的配置文件_config.yml，并修改post_asset-folder: true    在终端cd到博客目录下，运行npm install hexo-asset-ima">
+<meta name="twitter:image" content="http://yoursite.com/2018/04/13/在hexo博客中插入本地图片的方法/modify_config.png">
 
 
 
@@ -352,7 +354,17 @@
         <p>使用hexo搭建博客，生成博文之后文章中的图片却只能加载网络图片？<br>为什么不能加载hexo网站目录内的图片呢？于是乎…某度之后，有了本文，<br>这位同学Nuub的<a href="https://blog.csdn.net/sugar_rainbow/article/details/57415705" target="_blank" rel="noopener">博客</a>很好的解决了我的这个问题</p>
 <p>整体步骤总结如下：</p>
 <ol>
-<li><p>打开博客网站根目录下的配置文件_config.yml，并修改<figure class="highlight plain"><figcaption><span>true```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">![修改_config.yml](在hexo博客中插入本地图片的方法/modify_config.png)</span><br><span class="line"></span><br><span class="line">2. 在终端cd到博客目录下，运行```npm install hexo-asset-image --save```安装[插件](https://github.com/CodeFalling/hexo-asset-image)</span><br><span class="line">3. 执行```hexo n xxxx```之后会在```source/_post```目录下生成名为```xxxx.md```和一个同名的文件夹，之后*要插入文章的图片就是要放在这个同名文件夹中*</span><br><span class="line"></span><br><span class="line">4. 在需要引入图片的地方使用如下方法</span><br><span class="line">&gt;```![图片替换文字](文章名称/图片名称.png)</span><br></pre></td></tr></table></figure></p>
+<li>打开博客网站根目录下的配置文件_config.yml，并修改<br>post_asset-folder: true</li>
+</ol>
+<p><img src="/2018/04/13/在hexo博客中插入本地图片的方法/modify_config.png" alt="修改_config.yml"></p>
+<ol start="2">
+<li>在终端cd到博客目录下，运行<em>npm install hexo-asset-image –save</em>安装<a href="https://github.com/CodeFalling/hexo-asset-image" target="_blank" rel="noopener">插件</a></li>
+<li><p>执行<em>hexo n xxxx</em>之后会在<em>source/_post</em>目录下生成名为<em>xxxx.md</em>和一个同名的文件夹，之后<em>要插入文章的图片就是要放在这个同名文件夹中</em></p>
+</li>
+<li><p>在需要引入图片的地方使用如下方法</p>
+<blockquote>
+<p><code>![图片替换文字](文章名称/图片名称.png)</code></p>
+</blockquote>
 </li>
 <li><p>最后检查一下，<code>hexo g</code>生成页面后，进入<code>public\2017\02\26\index.html</code>文件中查看相关字段，可以发现，html标签内的语句是<code>&lt;img src=&quot;2017/02/26/xxxx/图片名.jpg&quot;&gt;</code>，而不是<code>&lt;img src=&quot;xxxx/图片名.jpg&gt;</code>。这很重要，关乎你的网页是否可以真正加载你想插入的图片。</p>
 </li>
