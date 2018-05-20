@@ -102,7 +102,7 @@
 <meta property="og:description" content="1991 - MrRong                              body {             font-family: &quot;Helvetica Neue&quot;, &quot;Luxi Sans&quot;, &quot;DejaVu Sans&quot;, Tahoma, &quot;Hiragino Sans GB&quot;, &quot;Microsoft Yahei&quot;, sans-serif;">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/520/hdImg_db5c74a6a3d87f638eab160c8a9251c815267483331.jpg">
-<meta property="og:updated_time" content="2018-05-19T17:29:11.117Z">
+<meta property="og:updated_time" content="2018-05-20T00:53:56.028Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Roee&#39;s Blog">
 <meta name="twitter:description" content="1991 - MrRong                              body {             font-family: &quot;Helvetica Neue&quot;, &quot;Luxi Sans&quot;, &quot;DejaVu Sans&quot;, Tahoma, &quot;Hiragino Sans GB&quot;, &quot;Microsoft Yahei&quot;, sans-serif;">
@@ -423,6 +423,7 @@
             e_minsold = (e_hrsold - hrsold) * 60;
             minsold = Math.floor((e_hrsold - hrsold) * 60);
             seconds = Math.floor((e_minsold - minsold) * 60);
+            window.days = daysold + "天" + hrsold + "小时" + minsold + "分" + seconds + "秒";
             span_dt_dt.innerHTML = daysold + "天" + hrsold + "小时" + minsold + "分" + seconds + "秒";
         }
         show_date_time();
@@ -433,7 +434,8 @@
                 S.Drawing.init('.canvas');
                 document.body.classList.add('body--ready');
                 //想说的话
-                S.UI.simulate("璟|I'm MrRong|请你耐心看完|2016.5.7|我们相遇|我的爱人|我会牵着|你的手|走到|满头白发|的那一天|我会守护|你生命|里的精彩|并陪伴你|一路|精彩下去|你的幸福|快乐|是我一生的|追求|我会每一天|带着笑脸|和你说|早安|我会每一晚|与你道声|晚安|再入梦乡|我会带你|去所有|你想去的|地方|陪你闹|看你笑|历经|你生命中|所有的|点点滴滴|我期待|这一生|与你一起|走过|我期待|与你|慢慢变老|等我们|老到哪儿|也去不了|还能满载|着一生的|幸福快乐|我会|为我们|的未来|撑起|一片天空|为我们|的将来|担负起|一生的|责任|愿意为你|去做|每一件|能让你|开心|快乐的事|所有|我们经历|的点点滴滴|都是我们|一辈子|最美的回忆|我愿意|爱你|直到老去|Yours, MrRong. 2018.5.20#time");
+                // I'm MrRong|我期待|与你慢慢变老|等我们|老到哪儿|也去不了|还能满载|着一生的|幸福快乐|我会|为我们|的未来|撑起|一片天空|为我们|的将来|担负起|一生的|责任|愿意为你|去做|每一件|能让你|开心|快乐的事|所有|我们经历|的点点滴滴|都是我们|一辈子|最美的回忆|我愿意|爱你|直到老去|Yours, MrRong.| 2018.5.20|
+                S.UI.simulate("璟|I'm MrRong|我期待|与你慢慢变老|等我们|老到哪儿|也去不了|还能满载|着一生的|幸福快乐|我会|为我们|的未来|撑起|一片天空|为我们|的将来|担负起|一生的|责任|愿意为你|去做|每一件|能让你|开心|快乐的事|所有|我们经历|的点点滴滴|都是我们|一辈子|最美的回忆|我愿意|爱你|直到老去|Yours, MrRong.|#end");
                 S.Drawing.loop(function () {
                     S.Shape.render();
                 });
@@ -449,7 +451,7 @@
                     window.oRequestAnimationFrame ||
                     window.msRequestAnimationFrame ||
                     function (callback) {
-                        window.setTimeout(callback, 1000 / 60);
+                        window.setTimeout(callback, 1000/60);
                     };
             return {
                 init: function (el) {
@@ -568,10 +570,14 @@
                                 }, 1000);
                             }
                             break;
+                        case 'end':
+                            let tttt = '2018.5.20';
+                            S.Shape.switchShape(S.ShapeBuilder.letter(tttt));
+                            break;
                         default:
                             S.Shape.switchShape(S.ShapeBuilder.letter(current[0] === cmd ? 'HacPai' : current));
                     }
-                }, 2000, sequence.length);
+                }, 3000, sequence.length);
             }
             return {
                 simulate: function (action) {
@@ -601,7 +607,7 @@
             this.p = new S.Point({
                 x: x,
                 y: y,
-                z: 5,
+                z: 1,
                 a: 1,
                 h: 0
             });
