@@ -102,7 +102,7 @@
 <meta property="og:description" content="1991 - MrRong                              body {             font-family: &quot;Helvetica Neue&quot;, &quot;Luxi Sans&quot;, &quot;DejaVu Sans&quot;, Tahoma, &quot;Hiragino Sans GB&quot;, &quot;Microsoft Yahei&quot;, sans-serif;">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/520/hdImg_db5c74a6a3d87f638eab160c8a9251c815267483331.jpg">
-<meta property="og:updated_time" content="2018-05-20T00:53:56.028Z">
+<meta property="og:updated_time" content="2018-05-20T03:20:55.158Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Roee&#39;s Blog">
 <meta name="twitter:description" content="1991 - MrRong                              body {             font-family: &quot;Helvetica Neue&quot;, &quot;Luxi Sans&quot;, &quot;DejaVu Sans&quot;, Tahoma, &quot;Hiragino Sans GB&quot;, &quot;Microsoft Yahei&quot;, sans-serif;">
@@ -435,7 +435,7 @@
                 document.body.classList.add('body--ready');
                 //想说的话
                 // I'm MrRong|我期待|与你慢慢变老|等我们|老到哪儿|也去不了|还能满载|着一生的|幸福快乐|我会|为我们|的未来|撑起|一片天空|为我们|的将来|担负起|一生的|责任|愿意为你|去做|每一件|能让你|开心|快乐的事|所有|我们经历|的点点滴滴|都是我们|一辈子|最美的回忆|我愿意|爱你|直到老去|Yours, MrRong.| 2018.5.20|
-                S.UI.simulate("璟|I'm MrRong|我期待|与你慢慢变老|等我们|老到哪儿|也去不了|还能满载|着一生的|幸福快乐|我会|为我们|的未来|撑起|一片天空|为我们|的将来|担负起|一生的|责任|愿意为你|去做|每一件|能让你|开心|快乐的事|所有|我们经历|的点点滴滴|都是我们|一辈子|最美的回忆|我愿意|爱你|直到老去|Yours, MrRong.|#end");
+                S.UI.simulate("璟|I'm MrRong|我期待|与你慢慢变老|等我们|老到哪儿|也去不了|还能满载|着一生的|幸福快乐|我会|为我们|的未来|撑起|一片天空|为我们|的将来|担负起|一生的|责任|愿意为你|去做|每一件|能让你|开心|快乐的事|所有|我们经历|的点点滴滴|都是我们|一辈子|最美的回忆|我愿意|爱你|直到老去|Yours|MrRong.|#end");
                 S.Drawing.loop(function () {
                     S.Shape.render();
                 });
@@ -481,7 +481,7 @@
                 drawCircle: function (p, c) {
                     context.fillStyle = c.render();
                     context.beginPath();
-                    context.arc(p.x, p.y, p.z, 0, 2 * Math.PI, true);
+                    context.arc(p.x, p.y, 1, 0, 2 * Math.PI, true);
                     context.closePath();
                     context.fill();
                 }
@@ -607,7 +607,7 @@
             this.p = new S.Point({
                 x: x,
                 y: y,
-                z: 1,
+                z: 5,
                 a: 1,
                 h: 0
             });
@@ -697,10 +697,10 @@
             }
         };
         S.ShapeBuilder = (function () {
-            var gap = 13,
+            var gap = 5,
                 shapeCanvas = document.createElement('canvas'),
                 shapeContext = shapeCanvas.getContext('2d'),
-                fontSize = 500,
+                fontSize = window.innerWidth*0.4,
                 fontFamily = 'Avenir, Helvetica Neue, Helvetica, Arial, sans-serif';
             function fit() {
                 shapeCanvas.width = Math.floor(window.innerWidth / gap) * gap;
@@ -769,7 +769,7 @@
                     var r = Math.max(0, d) / 2;
                     shapeContext.clearRect(0, 0, shapeCanvas.width, shapeCanvas.height);
                     shapeContext.beginPath();
-                    shapeContext.arc(r * gap, r * gap, r * gap, 0, 2 * Math.PI, false);
+                    shapeContext.arc(r * gap, r * gap, r * gap, 0, 2 * Math.PI, true);
                     shapeContext.fill();
                     shapeContext.closePath();
                     return processCanvas();
