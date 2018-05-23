@@ -102,7 +102,7 @@
 <meta property="og:description" content="从网络加载bmp图片iOS加载网络图片一般会使用SDWebImage，对于jpg、png这种常见的图片格式，SDWebImage没有什么问题，最近项目中服务端存放的是.bmp位图，SDWebImage就不好使了，报错如下 1Error Domain=SDWebImageErrorDomain Code=0 &amp;quot;Downloaded image has 0 pixels&amp;quot; User">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2018/05/19/iOS加载bmp位图/1.png">
-<meta property="og:updated_time" content="2018-05-19T13:06:24.195Z">
+<meta property="og:updated_time" content="2018-05-23T15:45:10.378Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS加载bmp位图">
 <meta name="twitter:description" content="从网络加载bmp图片iOS加载网络图片一般会使用SDWebImage，对于jpg、png这种常见的图片格式，SDWebImage没有什么问题，最近项目中服务端存放的是.bmp位图，SDWebImage就不好使了，报错如下 1Error Domain=SDWebImageErrorDomain Code=0 &amp;quot;Downloaded image has 0 pixels&amp;quot; User">
@@ -359,7 +359,7 @@ sessionManager.requestSerializer = [AFHTTPRequestSerializer serializer];
 [task resume];
 </code></pre>
 <p>这里需要注意，需要设置<code>sessionManager.responseSerializer.acceptableContentTypes</code>，否则同样无法获取到图片数据，<code>sessionManager.responseSerializer</code>需要设置为<code>AFImageResponseSerializer</code>，这样在请求完成回调中的<code>responseObject</code>直接就是一个UIImage对象，可以直接给<code>imageView.image</code>赋值</p>
-<h1 id="从本地加载bmp图片"><a href="#从本地加载bmp图片" class="headerlink" title="从本地加载bmp图片"></a>从本地加载bmp图片</h1><p>完～</p>
+<h1 id="从本地加载bmp图片"><a href="#从本地加载bmp图片" class="headerlink" title="从本地加载bmp图片"></a>从本地加载bmp图片</h1><p>未完待续～</p>
 
       
     </div>
